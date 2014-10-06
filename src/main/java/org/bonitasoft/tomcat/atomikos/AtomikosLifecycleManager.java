@@ -24,35 +24,40 @@ public class AtomikosLifecycleManager
             manager = new AtomikosLifecycleManager();
         }
 
-        return (manager);
+        return manager;
     }
 
-    public void startWebApp(String name) {
+    public void startWebApp(final String name) {
         webappName = name;
 
         atomikosObjectMap.put(name, new ArrayList<Object>());
     }
 
     public String getWebappName() {
-        return (webappName);
+        return webappName;
     }
 
-    public void addResource(Object obj) {
+    public void addResource(final Object obj) {
+        if (webappName == null) {
+            throw new RuntimeException(
+                    "Property 'webappName' is mandatory in Tomcat Listener with className 'org.bonitasoft.tomcat.atomikos.ContextLifecycleListener'");
+        }
         if (atomikosObjectMap.containsKey(webappName)) {
             atomikosObjectMap.get(webappName).add(obj);
         }
     }
 
-    public void stopWebApp(String name) {
+    public void stopWebApp(final String name) {
         if (atomikosObjectMap.containsKey(name)) {
-            List<Object> list = atomikosObjectMap.get(name);
-            for (Object obj : list) {
+            final List<Object> list = atomikosObjectMap.get(name);
+            for (final Object obj : list) {
                 /*
                  * CS: for JMS use only?
                  * if (obj instanceof AtomikosConnectionFactoryBean) {
                  * ((AtomikosConnectionFactoryBean) obj).close();
                  * } else
-                 */if (obj instanceof AtomikosDataSourceBean) {
+                 */
+                if (obj instanceof AtomikosDataSourceBean) {
                     ((AtomikosDataSourceBean) obj).close();
                 }
             }

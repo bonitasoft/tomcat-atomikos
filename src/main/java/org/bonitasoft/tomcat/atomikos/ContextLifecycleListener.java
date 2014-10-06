@@ -8,19 +8,19 @@ public class ContextLifecycleListener implements LifecycleListener {
 
     private String webappName = null;
 
-    public void setWebappName(String name) {
+    public void setWebappName(final String name) {
         webappName = name;
     }
 
     @Override
-    public void lifecycleEvent(LifecycleEvent event) {
+    public void lifecycleEvent(final LifecycleEvent event) {
         try {
             if (Lifecycle.START_EVENT.equals(event.getType())) {
                 AtomikosLifecycleManager.getInstance().startWebApp(webappName);
-            } else if (Lifecycle.STOP_EVENT.equals(event.getType())) {
+            } else if (Lifecycle.AFTER_STOP_EVENT.equals(event.getType())) {
                 AtomikosLifecycleManager.getInstance().stopWebApp(webappName);
             }
-        } catch (Exception e) {
+        } catch (final Exception e) {
             System.err.println(e.getMessage());
         }
     }

@@ -7,15 +7,14 @@ import org.apache.catalina.LifecycleListener;
 import com.atomikos.icatch.jta.UserTransactionManager;
 
 /**
- * http://www.atomikos.com/Documentation/Tomcat6Integration35Lifecycle
- * 
+ * http://www.atomikos.com/Documentation/Tomcat7Integration35
  */
 public class AtomikosLifecycleListener implements LifecycleListener {
 
     private UserTransactionManager utm;
 
     @Override
-    public void lifecycleEvent(LifecycleEvent event) {
+    public void lifecycleEvent(final LifecycleEvent event) {
         try {
             if (Lifecycle.START_EVENT.equals(event.getType())) {
                 if (utm == null) {
@@ -27,7 +26,7 @@ public class AtomikosLifecycleListener implements LifecycleListener {
                     utm.close();
                 }
             }
-        } catch (Exception e) {
+        } catch (final Exception e) {
             System.err.println(e.getMessage());
         }
     }
